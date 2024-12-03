@@ -70,10 +70,13 @@ func (lb *LoadBalancer) updateBackends(backends []string) error {
 	lb.mu.Lock()
 	defer lb.mu.Unlock()
 
+	// Reset weighted round-robin
+	lb.wrr = algorithm.NewWeightedRoundRobin()
+
 	var newBackends []*Backend
 	for i, backend := range backends {
 		url, err := url.Parse(backend)
-		if err != nil {
+		if err != nil || url.Scheme == "" || url.Host == "" {
 			return errors.New(errors.ErrConfigInvalid, fmt.Sprintf("invalid backend URL %s", backend), err)
 		}
 
@@ -210,9 +213,6 @@ func (rw *responseWriter) WriteHeader(status int) {
 }
 
 func (lb *LoadBalancer) Start(ctx context.Context) error {
-	// Start admin server
-	go lb.startAdminServer()
-
 	// Start frontend servers
 	errChan := make(chan error, len(lb.config.Frontends))
 	var wg sync.WaitGroup
@@ -223,35 +223,32 @@ func (lb *LoadBalancer) Start(ctx context.Context) error {
 			defer wg.Done()
 
 			var handler http.Handler = lb
+			server := &http.Server{
+				Addr:    fmt.Sprintf(":%d", port),
+				Handler: handler,
+			}
+
 			if lb.ssl != nil {
-				server := &http.Server{
-					Addr:      fmt.Sprintf(":%d", port),
-					Handler:   handler,
-					TLSConfig: lb.ssl.GetTLSConfig(),
-				}
+				server.TLSConfig = lb.ssl.GetTLSConfig()
+			}
 
-				go func() {
-					<-ctx.Done()
-					server.Shutdown(context.Background())
-				}()
+			// Handle graceful shutdown
+			go func() {
+				<-ctx.Done()
+				shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+				defer cancel()
+				server.Shutdown(shutdownCtx)
+			}()
 
-				if err := server.ListenAndServeTLS("", ""); err != http.ErrServerClosed {
-					errChan <- fmt.Errorf("frontend server error: %v", err)
-				}
+			var err error
+			if lb.ssl != nil {
+				err = server.ListenAndServeTLS("", "")
 			} else {
-				server := &http.Server{
-					Addr:    fmt.Sprintf(":%d", port),
-					Handler: handler,
-				}
+				err = server.ListenAndServe()
+			}
 
-				go func() {
-					<-ctx.Done()
-					server.Shutdown(context.Background())
-				}()
-
-				if err := server.ListenAndServe(); err != http.ErrServerClosed {
-					errChan <- fmt.Errorf("frontend server error: %v", err)
-				}
+			if err != nil && err != http.ErrServerClosed {
+				errChan <- fmt.Errorf("frontend server error: %v", err)
 			}
 		}(frontend.Port)
 	}

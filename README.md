@@ -1,6 +1,6 @@
 # HTTP Load Balancer
 
-A production-ready HTTP load balancer implementation in Go with advanced features including weighted round-robin, circuit breaker, rate limiting, and SSL/TLS support.
+An HTTP load balancer implementation in Go with several features, including weighted round-robin, circuit breaker, rate limiting, and SSL/TLS support.
 
 ## Features
 
