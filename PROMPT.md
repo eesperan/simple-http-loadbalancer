@@ -5,14 +5,23 @@ Create a robust HTTP load balancer implementation in Go with the following featu
 
    - Multiple backend support with configurable endpoints
    - Multiple frontend port configuration
-   - Round-robin load balancing algorithm
+   - Round-robin and weighted round-robin algorithms
    - Health check system for backend monitoring
    - Logging system for traffic patterns
    - Prometheus metrics integration
    - Dynamic configuration system
    - Graceful operations (shutdown, restart, rollout, rollback)
 
-2. Project Structure:
+2. Advanced Features:
+
+   - Circuit breaker pattern implementation
+   - Rate limiting with token bucket algorithm
+   - SSL/TLS termination with certificate management
+   - Dynamic weight adjustment based on performance
+   - Request timeout and retry mechanisms
+   - Error tracking and categorization
+
+3. Project Structure:
 
 ```
 lb-project/
@@ -20,10 +29,13 @@ lb-project/
 │   └── loadbalancer/        # Main application entry point
 ├── internal/
 │   ├── config/             # Configuration management
-│   ├── health/             # Health check implementation
-│   ├── logging/            # Logging system
+│   ├── balancer/           # Core load balancing logic
+│   ├── algorithm/          # Load balancing algorithms
+│   ├── circuitbreaker/     # Circuit breaker implementation
+│   ├── ratelimit/          # Rate limiting logic
+│   ├── ssl/                # SSL/TLS handling
 │   ├── metrics/            # Metrics collection
-│   └── balancer/           # Core load balancing logic
+│   └── errors/             # Error definitions
 ├── test/
 │   ├── integration/        # Integration tests
 │   └── reports/            # Test reports (gitignored)
@@ -39,7 +51,7 @@ lb-project/
 1. balancer Package:
 
    - LoadBalancer struct with backends management
-   - Round-robin backend selection
+   - Round-robin and weighted round-robin selection
    - HTTP request proxying
    - Backend health monitoring
    - Graceful shutdown support
@@ -50,6 +62,9 @@ lb-project/
    - YAML configuration parsing
    - Frontend/Backend configuration
    - Health check settings
+   - SSL/TLS configuration
+   - Circuit breaker settings
+   - Rate limit configuration
    - Logging configuration
    - Metrics settings
 
@@ -59,13 +74,38 @@ lb-project/
    - Request counting
    - Response time tracking
    - Backend health status
+   - Circuit breaker states
+   - Rate limiter statistics
    - Connection tracking
 
-4. Example Backend:
+4. circuitbreaker Package:
+
+   - Circuit breaker implementation
+   - Failure detection
+   - Half-open state handling
+   - Automatic recovery
+   - State tracking
+
+5. ratelimit Package:
+
+   - Token bucket algorithm
+   - Sliding window implementation
+   - Burst handling
+   - Rate tracking
+
+6. ssl Package:
+
+   - Certificate management
+   - TLS configuration
+   - Certificate reloading
+   - Client authentication
+
+7. Example Backend:
    - Simple HTTP server
    - Health check endpoint
    - Request logging
    - Response identification
+   - Load simulation
      </package_implementations>
 
 <implementation_steps>
@@ -80,6 +120,11 @@ lb-project/
 8. Create example backend servers
 9. Add Docker support
 10. Implement testing infrastructure
+11. Add circuit breaker implementation
+12. Add rate limiting support
+13. Implement SSL/TLS handling
+14. Add weighted round-robin algorithm
+15. Implement error tracking system
     </implementation_steps>
 
 <testing_requirements>
@@ -91,6 +136,10 @@ lb-project/
    - Metrics package tests
    - Health check tests
    - Rollout/Rollback tests
+   - Circuit breaker tests
+   - Rate limiter tests
+   - SSL/TLS tests
+   - Algorithm tests
 
 2. Integration Tests:
 
@@ -98,12 +147,24 @@ lb-project/
    - Load balancing verification
    - Health check verification
    - Metrics endpoint testing
+   - Circuit breaker behavior
+   - Rate limiting effectiveness
+   - SSL/TLS functionality
 
-3. Test Infrastructure:
+3. Performance Tests:
+
+   - Benchmark tests
+   - Load tests
+   - Concurrency tests
+   - Resource usage monitoring
+   - Latency measurements
+
+4. Test Infrastructure:
    - HTML test reports
    - Coverage reporting
    - Integration test framework
    - Test automation scripts
+   - Benchmark reporting
      </testing_requirements>
 
 <documentation_requirements>
@@ -117,6 +178,7 @@ lb-project/
    - Usage examples
    - Configuration guide
    - API documentation
+   - Performance characteristics
 
 2. DEVELOPMENT.md:
 
@@ -126,12 +188,26 @@ lb-project/
    - Code style guide
    - Release process
    - Best practices
+   - Performance targets
+   - Benchmark instructions
 
-3. Code Documentation:
-   - Package documentation
+3. ARCHITECTURE.md:
+
+   - System overview
+   - Component interactions
+   - Data flow descriptions
+   - Performance benchmarks
+   - Failure scenarios
+   - Recovery procedures
+   - Security considerations
+
+4. Code Documentation:
+   - Package documentation (doc.go)
    - Function documentation
    - Type documentation
    - Example usage
+   - Performance notes
+   - Error handling
      </documentation_requirements>
 
 <file_specifications>
@@ -141,15 +217,28 @@ lb-project/
 ```yaml
 frontends:
   - port: 8080
-  - port: 8081
+  - port: 8443 # SSL port
 backends:
-  - "http://backend1:9001"
-  - "http://backend2:9002"
-  - "http://backend3:9003"
+  - url: "http://backend1:9001"
+    weight: 5
+  - url: "http://backend2:9002"
+    weight: 3
 healthcheck:
   interval: "10s"
   timeout: "2s"
   path: "/health"
+ssl:
+  certFile: "cert.pem"
+  keyFile: "key.pem"
+  caFile: "ca.pem"
+ratelimit:
+  enabled: true
+  rate: 1000
+  burst: 100
+circuitbreaker:
+  threshold: 5
+  timeout: "30s"
+  maxHalfOpen: 3
 logging:
   level: "info"
   format: "json"
@@ -172,7 +261,7 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 COPY --from=builder /app/loadbalancer .
 COPY --from=builder /app/config.yaml .
-EXPOSE 8080 9090
+EXPOSE 8080 8443 9090
 CMD ["./loadbalancer"]
 ```
 
@@ -185,7 +274,7 @@ services:
     build: .
     ports:
       - "8080:8080"
-      - "8081:8081"
+      - "8443:8443"
       - "9090:9090"
     depends_on:
       - backend1
@@ -227,6 +316,7 @@ require (
 
    - run-tests.sh for test execution
    - run-integration-tests.sh for integration testing
+   - run-benchmarks.sh for performance testing
    - Makefile for common operations
 
 2. Development Dependencies:
@@ -235,6 +325,7 @@ require (
    - Docker and Docker Compose
    - golangci-lint
    - go-test-report
+   - hey (for load testing)
 
 3. Build Tools:
    - Make
@@ -255,7 +346,32 @@ The implementation must satisfy:
 8. Health checking
 9. Graceful operations
 10. Example backend servers
+11. Performance targets met
+12. Security requirements satisfied
     </completion_criteria>
+
+<performance_requirements>
+The implementation must meet these performance targets:
+
+1. Latency:
+
+   - HTTP requests: < 1ms average
+   - HTTPS requests: < 2ms average
+   - Circuit breaker overhead: < 0.1ms
+   - Rate limiter overhead: < 0.1ms
+
+2. Resource Usage:
+
+   - Memory: < 500MB under full load
+   - CPU: < 50% per core
+   - File descriptors: < 1000 per process
+   - Goroutines: < 10000 at peak
+
+3. Scalability:
+   - Support 100+ backend servers
+   - Handle 10,000 concurrent connections
+   - Process 50,000 requests per second
+     </performance_requirements>
 
 <license_requirements>
 Use MIT License for the project to allow free redistribution while maintaining basic protections.
@@ -275,7 +391,13 @@ Use MIT License for the project to allow free redistribution while maintaining b
    ./scripts/run-integration-tests.sh
    ```
 
-3. Manual Testing:
+3. Performance Test Verification:
+
+   ```bash
+   ./scripts/run-benchmarks.sh
+   ```
+
+4. Manual Testing:
 
    ```bash
    # Start the system
@@ -289,6 +411,9 @@ Use MIT License for the project to allow free redistribution while maintaining b
 
    # Verify health checks
    curl http://localhost:8080/health
+
+   # Test SSL
+   curl https://localhost:8443/ --cacert ca.pem
    ```
 
-   </testing_verification>
+</testing_verification>
