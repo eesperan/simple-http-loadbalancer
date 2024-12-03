@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  loadbalancer:
+    build: .
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+      - "9090:9090"
+    depends_on:
+      - backend1
+      - backend2
+      - backend3
+
+  backend1:
+    build:
+      context: .
+      dockerfile: examples/backend/Dockerfile
+    command: ["/app/backend", "-port=9001", "-id=1"]
+
+  backend2:
+    build:
+      context: .
+      dockerfile: examples/backend/Dockerfile
+    command: ["/app/backend", "-port=9002", "-id=2"]
+
+  backend3:
+    build:
+      context: .
+      dockerfile: examples/backend/Dockerfile
+    command: ["/app/backend", "-port=9003", "-id=3"]

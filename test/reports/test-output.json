@@ -1,0 +1,158 @@
+{"Time":"2024-12-02T16:03:37.832051-08:00","Action":"start","Package":"loadbalancer/examples/backend"}
+{"Time":"2024-12-02T16:03:37.832153-08:00","Action":"output","Package":"loadbalancer/examples/backend","Output":"?   \tloadbalancer/examples/backend\t[no test files]\n"}
+{"Time":"2024-12-02T16:03:37.832177-08:00","Action":"skip","Package":"loadbalancer/examples/backend","Elapsed":0}
+FAIL	loadbalancer/internal/balancer [build failed]
+{"Time":"2024-12-02T16:03:38.37298-08:00","Action":"start","Package":"loadbalancer/internal/balancer/algorithm"}
+{"Time":"2024-12-02T16:03:38.373207-08:00","Action":"start","Package":"loadbalancer/internal/circuitbreaker"}
+{"Time":"2024-12-02T16:03:38.383963-08:00","Action":"start","Package":"loadbalancer/internal/config"}
+{"Time":"2024-12-02T16:03:38.384063-08:00","Action":"start","Package":"loadbalancer/internal/errors"}
+{"Time":"2024-12-02T16:03:38.384095-08:00","Action":"output","Package":"loadbalancer/internal/errors","Output":"?   \tloadbalancer/internal/errors\t[no test files]\n"}
+{"Time":"2024-12-02T16:03:38.384113-08:00","Action":"skip","Package":"loadbalancer/internal/errors","Elapsed":0}
+{"Time":"2024-12-02T16:03:38.538528-08:00","Action":"start","Package":"loadbalancer/internal/metrics"}
+{"Time":"2024-12-02T16:03:38.538604-08:00","Action":"start","Package":"loadbalancer/internal/ratelimit"}
+{"Time":"2024-12-02T16:03:38.538658-08:00","Action":"start","Package":"loadbalancer/internal/ssl"}
+{"Time":"2024-12-02T16:03:38.554882-08:00","Action":"start","Package":"loadbalancer/test/integration"}
+{"Time":"2024-12-02T16:03:38.713989-08:00","Action":"run","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreaker"}
+{"Time":"2024-12-02T16:03:38.714065-08:00","Action":"output","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreaker","Output":"=== RUN   TestCircuitBreaker\n"}
+{"Time":"2024-12-02T16:03:38.865558-08:00","Action":"output","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreaker","Output":"--- PASS: TestCircuitBreaker (0.15s)\n"}
+{"Time":"2024-12-02T16:03:38.865655-08:00","Action":"pass","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreaker","Elapsed":0.15}
+{"Time":"2024-12-02T16:03:38.865748-08:00","Action":"run","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreakerReset"}
+{"Time":"2024-12-02T16:03:38.86577-08:00","Action":"output","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreakerReset","Output":"=== RUN   TestCircuitBreakerReset\n"}
+{"Time":"2024-12-02T16:03:38.865783-08:00","Action":"output","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreakerReset","Output":"--- PASS: TestCircuitBreakerReset (0.00s)\n"}
+{"Time":"2024-12-02T16:03:38.865809-08:00","Action":"pass","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreakerReset","Elapsed":0}
+{"Time":"2024-12-02T16:03:38.865825-08:00","Action":"run","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreakerConcurrency"}
+{"Time":"2024-12-02T16:03:38.865835-08:00","Action":"output","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreakerConcurrency","Output":"=== RUN   TestCircuitBreakerConcurrency\n"}
+{"Time":"2024-12-02T16:03:39.045275-08:00","Action":"run","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobin"}
+{"Time":"2024-12-02T16:03:39.045305-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobin","Output":"=== RUN   TestWeightedRoundRobin\n"}
+{"Time":"2024-12-02T16:03:39.045322-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobin","Output":"--- PASS: TestWeightedRoundRobin (0.00s)\n"}
+{"Time":"2024-12-02T16:03:39.045326-08:00","Action":"pass","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobin","Elapsed":0}
+{"Time":"2024-12-02T16:03:39.045335-08:00","Action":"run","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinEdgeCases"}
+{"Time":"2024-12-02T16:03:39.045338-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinEdgeCases","Output":"=== RUN   TestWeightedRoundRobinEdgeCases\n"}
+{"Time":"2024-12-02T16:03:39.045356-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinEdgeCases","Output":"--- PASS: TestWeightedRoundRobinEdgeCases (0.00s)\n"}
+{"Time":"2024-12-02T16:03:39.045359-08:00","Action":"pass","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinEdgeCases","Elapsed":0}
+{"Time":"2024-12-02T16:03:39.045363-08:00","Action":"run","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinConcurrency"}
+{"Time":"2024-12-02T16:03:39.045366-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinConcurrency","Output":"=== RUN   TestWeightedRoundRobinConcurrency\n"}
+{"Time":"2024-12-02T16:03:39.074287-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinConcurrency","Output":"--- PASS: TestWeightedRoundRobinConcurrency (0.03s)\n"}
+{"Time":"2024-12-02T16:03:39.074317-08:00","Action":"pass","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinConcurrency","Elapsed":0.03}
+{"Time":"2024-12-02T16:03:39.074323-08:00","Action":"run","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinDynamicAdjustment"}
+{"Time":"2024-12-02T16:03:39.074348-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinDynamicAdjustment","Output":"=== RUN   TestWeightedRoundRobinDynamicAdjustment\n"}
+{"Time":"2024-12-02T16:03:39.074359-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinDynamicAdjustment","Output":"--- PASS: TestWeightedRoundRobinDynamicAdjustment (0.00s)\n"}
+{"Time":"2024-12-02T16:03:39.074363-08:00","Action":"pass","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinDynamicAdjustment","Elapsed":0}
+{"Time":"2024-12-02T16:03:39.074366-08:00","Action":"run","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinGetBackends"}
+{"Time":"2024-12-02T16:03:39.074369-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinGetBackends","Output":"=== RUN   TestWeightedRoundRobinGetBackends\n"}
+{"Time":"2024-12-02T16:03:39.074372-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinGetBackends","Output":"--- PASS: TestWeightedRoundRobinGetBackends (0.00s)\n"}
+{"Time":"2024-12-02T16:03:39.074375-08:00","Action":"pass","Package":"loadbalancer/internal/balancer/algorithm","Test":"TestWeightedRoundRobinGetBackends","Elapsed":0}
+{"Time":"2024-12-02T16:03:39.074377-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Output":"PASS\n"}
+{"Time":"2024-12-02T16:03:39.075792-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Output":"\tloadbalancer/internal/balancer/algorithm\tcoverage: 95.1% of statements\n"}
+{"Time":"2024-12-02T16:03:39.076498-08:00","Action":"output","Package":"loadbalancer/internal/balancer/algorithm","Output":"ok  \tloadbalancer/internal/balancer/algorithm\t0.703s\tcoverage: 95.1% of statements\n"}
+{"Time":"2024-12-02T16:03:39.076505-08:00","Action":"pass","Package":"loadbalancer/internal/balancer/algorithm","Elapsed":0.704}
+{"Time":"2024-12-02T16:03:39.222641-08:00","Action":"run","Package":"loadbalancer/internal/config","Test":"TestLoad"}
+{"Time":"2024-12-02T16:03:39.222678-08:00","Action":"output","Package":"loadbalancer/internal/config","Test":"TestLoad","Output":"=== RUN   TestLoad\n"}
+{"Time":"2024-12-02T16:03:39.223446-08:00","Action":"output","Package":"loadbalancer/internal/config","Test":"TestLoad","Output":"--- PASS: TestLoad (0.00s)\n"}
+{"Time":"2024-12-02T16:03:39.223458-08:00","Action":"pass","Package":"loadbalancer/internal/config","Test":"TestLoad","Elapsed":0}
+{"Time":"2024-12-02T16:03:39.223469-08:00","Action":"run","Package":"loadbalancer/internal/config","Test":"TestLoadDefaults"}
+{"Time":"2024-12-02T16:03:39.223473-08:00","Action":"output","Package":"loadbalancer/internal/config","Test":"TestLoadDefaults","Output":"=== RUN   TestLoadDefaults\n"}
+{"Time":"2024-12-02T16:03:39.223689-08:00","Action":"output","Package":"loadbalancer/internal/config","Test":"TestLoadDefaults","Output":"    config_test.go:141: Expected default metrics port 9090, got 0\n"}
+{"Time":"2024-12-02T16:03:39.223725-08:00","Action":"output","Package":"loadbalancer/internal/config","Test":"TestLoadDefaults","Output":"--- FAIL: TestLoadDefaults (0.00s)\n"}
+{"Time":"2024-12-02T16:03:39.223733-08:00","Action":"fail","Package":"loadbalancer/internal/config","Test":"TestLoadDefaults","Elapsed":0}
+{"Time":"2024-12-02T16:03:39.223736-08:00","Action":"run","Package":"loadbalancer/internal/config","Test":"TestLoadInvalidFile"}
+{"Time":"2024-12-02T16:03:39.223739-08:00","Action":"output","Package":"loadbalancer/internal/config","Test":"TestLoadInvalidFile","Output":"=== RUN   TestLoadInvalidFile\n"}
+{"Time":"2024-12-02T16:03:39.223995-08:00","Action":"output","Package":"loadbalancer/internal/config","Test":"TestLoadInvalidFile","Output":"--- PASS: TestLoadInvalidFile (0.00s)\n"}
+{"Time":"2024-12-02T16:03:39.224001-08:00","Action":"pass","Package":"loadbalancer/internal/config","Test":"TestLoadInvalidFile","Elapsed":0}
+{"Time":"2024-12-02T16:03:39.224004-08:00","Action":"output","Package":"loadbalancer/internal/config","Output":"FAIL\n"}
+{"Time":"2024-12-02T16:03:39.224941-08:00","Action":"output","Package":"loadbalancer/internal/config","Output":"\tloadbalancer/internal/config\tcoverage: 79.3% of statements\n"}
+{"Time":"2024-12-02T16:03:39.225444-08:00","Action":"output","Package":"loadbalancer/internal/config","Output":"FAIL\tloadbalancer/internal/config\t0.841s\n"}
+{"Time":"2024-12-02T16:03:39.225458-08:00","Action":"fail","Package":"loadbalancer/internal/config","Elapsed":0.842}
+{"Time":"2024-12-02T16:03:39.558059-08:00","Action":"run","Package":"loadbalancer/internal/ratelimit","Test":"TestTokenBucket"}
+{"Time":"2024-12-02T16:03:39.558088-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestTokenBucket","Output":"=== RUN   TestTokenBucket\n"}
+{"Time":"2024-12-02T16:03:39.558096-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestTokenBucket","Output":"    ratelimit_test.go:30: Expected rate limit to be exceeded\n"}
+{"Time":"2024-12-02T16:03:39.56684-08:00","Action":"run","Package":"loadbalancer/internal/metrics","Test":"TestNew"}
+{"Time":"2024-12-02T16:03:39.566874-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestNew","Output":"=== RUN   TestNew\n"}
+{"Time":"2024-12-02T16:03:39.566882-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestNew","Output":"--- PASS: TestNew (0.00s)\n"}
+{"Time":"2024-12-02T16:03:39.56689-08:00","Action":"pass","Package":"loadbalancer/internal/metrics","Test":"TestNew","Elapsed":0}
+{"Time":"2024-12-02T16:03:39.566895-08:00","Action":"run","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement"}
+{"Time":"2024-12-02T16:03:39.566897-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"=== RUN   TestMetricsIncrement\n"}
+{"Time":"2024-12-02T16:03:39.566984-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"--- FAIL: TestMetricsIncrement (0.00s)\n"}
+{"Time":"2024-12-02T16:03:39.56951-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"panic: duplicate metrics collector registration attempted [recovered]\n"}
+{"Time":"2024-12-02T16:03:39.56952-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"\tpanic: duplicate metrics collector registration attempted\n"}
+{"Time":"2024-12-02T16:03:39.569524-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"\n"}
+{"Time":"2024-12-02T16:03:39.569537-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"goroutine 42 [running]:\n"}
+{"Time":"2024-12-02T16:03:39.56954-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"testing.tRunner.func1.2({0x1028b5580, 0x140001aa1a0})\n"}
+{"Time":"2024-12-02T16:03:39.569543-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"\t/opt/homebrew/Cellar/go/1.20.3/libexec/src/testing/testing.go:1526 +0x1c8\n"}
+{"Time":"2024-12-02T16:03:39.569545-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"testing.tRunner.func1()\n"}
+{"Time":"2024-12-02T16:03:39.569554-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"\t/opt/homebrew/Cellar/go/1.20.3/libexec/src/testing/testing.go:1529 +0x384\n"}
+{"Time":"2024-12-02T16:03:39.569558-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"panic({0x1028b5580, 0x140001aa1a0})\n"}
+{"Time":"2024-12-02T16:03:39.569561-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"\t/opt/homebrew/Cellar/go/1.20.3/libexec/src/runtime/panic.go:884 +0x204\n"}
+{"Time":"2024-12-02T16:03:39.569564-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"github.com/prometheus/client_golang/prometheus.(*Registry).MustRegister(0x0?, {0x1400019c400?, 0x1, 0x0?})\n"}
+{"Time":"2024-12-02T16:03:39.569568-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"\t/Users/este/go/pkg/mod/github.com/prometheus/client_golang@v1.16.0/prometheus/registry.go:405 +0x84\n"}
+{"Time":"2024-12-02T16:03:39.569586-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"github.com/prometheus/client_golang/prometheus/promauto.Factory.NewCounter({{0x102905b90?, 0x140000c2870?}}, {{0x0, 0x0}, {0x0, 0x0}, {0x1027a3c3d, 0x1b}, {0x1027aa60e, 0x26}, ...})\n"}
+{"Time":"2024-12-02T16:03:39.569597-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"\t/Users/este/go/pkg/mod/github.com/prometheus/client_golang@v1.16.0/prometheus/promauto/auto.go:265 +0xf4\n"}
+{"Time":"2024-12-02T16:03:39.569602-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"github.com/prometheus/client_golang/prometheus/promauto.NewCounter(...)\n"}
+{"Time":"2024-12-02T16:03:39.569605-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"\t/Users/este/go/pkg/mod/github.com/prometheus/client_golang@v1.16.0/prometheus/promauto/auto.go:168\n"}
+{"Time":"2024-12-02T16:03:39.569608-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"loadbalancer/internal/metrics.New()\n"}
+{"Time":"2024-12-02T16:03:39.569613-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"\t/Users/este/Desktop/lb-project/internal/metrics/metrics.go:18 +0xcc\n"}
+{"Time":"2024-12-02T16:03:39.569616-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"loadbalancer/internal/metrics.TestMetricsIncrement(0x140001849c0)\n"}
+{"Time":"2024-12-02T16:03:39.569619-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"\t/Users/este/Desktop/lb-project/internal/metrics/metrics_test.go:54 +0x24\n"}
+{"Time":"2024-12-02T16:03:39.569623-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"testing.tRunner(0x140001849c0, 0x1029016b8)\n"}
+{"Time":"2024-12-02T16:03:39.569626-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"\t/opt/homebrew/Cellar/go/1.20.3/libexec/src/testing/testing.go:1576 +0x10c\n"}
+{"Time":"2024-12-02T16:03:39.569635-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"created by testing.(*T).Run\n"}
+{"Time":"2024-12-02T16:03:39.569638-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Output":"\t/opt/homebrew/Cellar/go/1.20.3/libexec/src/testing/testing.go:1629 +0x368\n"}
+{"Time":"2024-12-02T16:03:39.570043-08:00","Action":"fail","Package":"loadbalancer/internal/metrics","Test":"TestMetricsIncrement","Elapsed":0}
+{"Time":"2024-12-02T16:03:39.570068-08:00","Action":"output","Package":"loadbalancer/internal/metrics","Output":"FAIL\tloadbalancer/internal/metrics\t1.031s\n"}
+{"Time":"2024-12-02T16:03:39.570073-08:00","Action":"fail","Package":"loadbalancer/internal/metrics","Elapsed":1.032}
+{"Time":"2024-12-02T16:03:39.758828-08:00","Action":"run","Package":"loadbalancer/internal/ssl","Test":"TestSSLManager"}
+{"Time":"2024-12-02T16:03:39.758859-08:00","Action":"output","Package":"loadbalancer/internal/ssl","Test":"TestSSLManager","Output":"=== RUN   TestSSLManager\n"}
+{"Time":"2024-12-02T16:03:39.87127-08:00","Action":"output","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreakerConcurrency","Output":"--- PASS: TestCircuitBreakerConcurrency (1.01s)\n"}
+{"Time":"2024-12-02T16:03:39.871313-08:00","Action":"pass","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreakerConcurrency","Elapsed":1.01}
+{"Time":"2024-12-02T16:03:39.871319-08:00","Action":"run","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreakerEdgeCases"}
+{"Time":"2024-12-02T16:03:39.871329-08:00","Action":"output","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreakerEdgeCases","Output":"=== RUN   TestCircuitBreakerEdgeCases\n"}
+{"Time":"2024-12-02T16:03:39.871338-08:00","Action":"output","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreakerEdgeCases","Output":"--- PASS: TestCircuitBreakerEdgeCases (0.00s)\n"}
+{"Time":"2024-12-02T16:03:39.871344-08:00","Action":"pass","Package":"loadbalancer/internal/circuitbreaker","Test":"TestCircuitBreakerEdgeCases","Elapsed":0}
+{"Time":"2024-12-02T16:03:39.871348-08:00","Action":"output","Package":"loadbalancer/internal/circuitbreaker","Output":"PASS\n"}
+{"Time":"2024-12-02T16:03:39.872563-08:00","Action":"output","Package":"loadbalancer/internal/circuitbreaker","Output":"\tloadbalancer/internal/circuitbreaker\tcoverage: 96.0% of statements\n"}
+{"Time":"2024-12-02T16:03:39.873427-08:00","Action":"output","Package":"loadbalancer/internal/circuitbreaker","Output":"ok  \tloadbalancer/internal/circuitbreaker\t1.500s\tcoverage: 96.0% of statements\n"}
+{"Time":"2024-12-02T16:03:39.873434-08:00","Action":"pass","Package":"loadbalancer/internal/circuitbreaker","Elapsed":1.5}
+{"Time":"2024-12-02T16:03:40.076478-08:00","Action":"run","Package":"loadbalancer/test/integration","Test":"TestLoadBalancerIntegration"}
+{"Time":"2024-12-02T16:03:40.076512-08:00","Action":"output","Package":"loadbalancer/test/integration","Test":"TestLoadBalancerIntegration","Output":"=== RUN   TestLoadBalancerIntegration\n"}
+{"Time":"2024-12-02T16:03:40.27944-08:00","Action":"output","Package":"loadbalancer/test/integration","Test":"TestLoadBalancerIntegration","Output":"    loadbalancer_test.go:107: Load balancer failed: frontend server error: listen tcp :8080: bind: address already in use\n"}
+{"Time":"2024-12-02T16:03:40.560998-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestTokenBucket","Output":"--- FAIL: TestTokenBucket (1.00s)\n"}
+{"Time":"2024-12-02T16:03:40.561131-08:00","Action":"fail","Package":"loadbalancer/internal/ratelimit","Test":"TestTokenBucket","Elapsed":1}
+{"Time":"2024-12-02T16:03:40.561154-08:00","Action":"run","Package":"loadbalancer/internal/ratelimit","Test":"TestTokenBucketConcurrency"}
+{"Time":"2024-12-02T16:03:40.561191-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestTokenBucketConcurrency","Output":"=== RUN   TestTokenBucketConcurrency\n"}
+{"Time":"2024-12-02T16:03:40.584884-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestTokenBucketConcurrency","Output":"    ratelimit_test.go:78: Total: 200, Allowed: 102, Rejected: 98\n"}
+{"Time":"2024-12-02T16:03:40.584945-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestTokenBucketConcurrency","Output":"--- PASS: TestTokenBucketConcurrency (0.02s)\n"}
+{"Time":"2024-12-02T16:03:40.584961-08:00","Action":"pass","Package":"loadbalancer/internal/ratelimit","Test":"TestTokenBucketConcurrency","Elapsed":0.02}
+{"Time":"2024-12-02T16:03:40.584974-08:00","Action":"run","Package":"loadbalancer/internal/ratelimit","Test":"TestWindowRateLimiter"}
+{"Time":"2024-12-02T16:03:40.584992-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestWindowRateLimiter","Output":"=== RUN   TestWindowRateLimiter\n"}
+{"Time":"2024-12-02T16:03:41.382019-08:00","Action":"output","Package":"loadbalancer/test/integration","Test":"TestLoadBalancerIntegration","Output":"    loadbalancer_test.go:164: Expected timeout status, got 200\n"}
+{"Time":"2024-12-02T16:03:41.383022-08:00","Action":"output","Package":"loadbalancer/test/integration","Test":"TestLoadBalancerIntegration","Output":"    loadbalancer_test.go:171: Metrics endpoint failed: Get \"http://localhost:9090/metrics\": read tcp [::1]:59663-\u003e[::1]:9090: read: connection reset by peer\n"}
+{"Time":"2024-12-02T16:03:41.383298-08:00","Action":"output","Package":"loadbalancer/test/integration","Test":"TestLoadBalancerIntegration","Output":"--- FAIL: TestLoadBalancerIntegration (1.31s)\n"}
+{"Time":"2024-12-02T16:03:41.383329-08:00","Action":"fail","Package":"loadbalancer/test/integration","Test":"TestLoadBalancerIntegration","Elapsed":1.31}
+{"Time":"2024-12-02T16:03:41.383337-08:00","Action":"run","Package":"loadbalancer/test/integration","Test":"TestLoadBalancerSSL"}
+{"Time":"2024-12-02T16:03:41.383341-08:00","Action":"output","Package":"loadbalancer/test/integration","Test":"TestLoadBalancerSSL","Output":"=== RUN   TestLoadBalancerSSL\n"}
+{"Time":"2024-12-02T16:03:41.383347-08:00","Action":"output","Package":"loadbalancer/test/integration","Test":"TestLoadBalancerSSL","Output":"    loadbalancer_test.go:194: SSL certificates not available\n"}
+{"Time":"2024-12-02T16:03:41.383355-08:00","Action":"output","Package":"loadbalancer/test/integration","Test":"TestLoadBalancerSSL","Output":"--- SKIP: TestLoadBalancerSSL (0.00s)\n"}
+{"Time":"2024-12-02T16:03:41.383359-08:00","Action":"skip","Package":"loadbalancer/test/integration","Test":"TestLoadBalancerSSL","Elapsed":0}
+{"Time":"2024-12-02T16:03:41.383362-08:00","Action":"output","Package":"loadbalancer/test/integration","Output":"FAIL\n"}
+{"Time":"2024-12-02T16:03:41.383726-08:00","Action":"output","Package":"loadbalancer/test/integration","Output":"coverage: [no statements]\n"}
+{"Time":"2024-12-02T16:03:41.385047-08:00","Action":"output","Package":"loadbalancer/test/integration","Output":"FAIL\tloadbalancer/test/integration\t2.830s\n"}
+{"Time":"2024-12-02T16:03:41.385058-08:00","Action":"fail","Package":"loadbalancer/test/integration","Elapsed":2.83}
+{"Time":"2024-12-02T16:03:41.586133-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestWindowRateLimiter","Output":"--- PASS: TestWindowRateLimiter (1.00s)\n"}
+{"Time":"2024-12-02T16:03:41.586194-08:00","Action":"pass","Package":"loadbalancer/internal/ratelimit","Test":"TestWindowRateLimiter","Elapsed":1}
+{"Time":"2024-12-02T16:03:41.586201-08:00","Action":"run","Package":"loadbalancer/internal/ratelimit","Test":"TestWindowRateLimiterConcurrency"}
+{"Time":"2024-12-02T16:03:41.586204-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestWindowRateLimiterConcurrency","Output":"=== RUN   TestWindowRateLimiterConcurrency\n"}
+{"Time":"2024-12-02T16:03:41.597623-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestWindowRateLimiterConcurrency","Output":"    ratelimit_test.go:151: Total: 100, Allowed: 50, Rejected: 50\n"}
+{"Time":"2024-12-02T16:03:41.597691-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestWindowRateLimiterConcurrency","Output":"--- PASS: TestWindowRateLimiterConcurrency (0.01s)\n"}
+{"Time":"2024-12-02T16:03:41.597696-08:00","Action":"pass","Package":"loadbalancer/internal/ratelimit","Test":"TestWindowRateLimiterConcurrency","Elapsed":0.01}
+{"Time":"2024-12-02T16:03:41.597702-08:00","Action":"run","Package":"loadbalancer/internal/ratelimit","Test":"TestRateLimiterEdgeCases"}
+{"Time":"2024-12-02T16:03:41.597705-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestRateLimiterEdgeCases","Output":"=== RUN   TestRateLimiterEdgeCases\n"}
+{"Time":"2024-12-02T16:03:41.597708-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestRateLimiterEdgeCases","Output":"--- PASS: TestRateLimiterEdgeCases (0.00s)\n"}
+{"Time":"2024-12-02T16:03:41.597715-08:00","Action":"pass","Package":"loadbalancer/internal/ratelimit","Test":"TestRateLimiterEdgeCases","Elapsed":0}
+{"Time":"2024-12-02T16:03:41.597718-08:00","Action":"run","Package":"loadbalancer/internal/ratelimit","Test":"TestRateLimiterBurstHandling"}
+{"Time":"2024-12-02T16:03:41.59772-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestRateLimiterBurstHandling","Output":"=== RUN   TestRateLimiterBurstHandling\n"}
+{"Time":"2024-12-02T16:03:43.598678-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Test":"TestRateLimiterBurstHandling","Output":"--- PASS: TestRateLimiterBurstHandling (2.00s)\n"}
+{"Time":"2024-12-02T16:03:43.598711-08:00","Action":"pass","Package":"loadbalancer/internal/ratelimit","Test":"TestRateLimiterBurstHandling","Elapsed":2}
+{"Time":"2024-12-02T16:03:43.598717-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Output":"FAIL\n"}
+{"Time":"2024-12-02T16:03:43.600352-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Output":"\tloadbalancer/internal/ratelimit\tcoverage: 100.0% of statements\n"}
+{"Time":"2024-12-02T16:03:43.600999-08:00","Action":"output","Package":"loadbalancer/internal/ratelimit","Output":"FAIL\tloadbalancer/internal/ratelimit\t5.061s\n"}
+{"Time":"2024-12-02T16:03:43.601006-08:00","Action":"fail","Package":"loadbalancer/internal/ratelimit","Elapsed":5.062}

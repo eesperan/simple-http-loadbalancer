@@ -1,0 +1,21 @@
+frontends:
+  - port: 8080
+  - port: 8081
+
+backends:
+  - "http://backend1:9001"
+  - "http://backend2:9002"
+  - "http://backend3:9003"
+
+healthcheck:
+  interval: "10s"
+  timeout: "2s"
+  path: "/health"
+
+logging:
+  level: "info"
+  format: "json"
+
+metrics:
+  enabled: true
+  port: 9090
