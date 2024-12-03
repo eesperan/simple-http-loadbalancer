@@ -103,7 +103,7 @@ func TestServeHTTP(t *testing.T) {
 func TestGracefulShutdown(t *testing.T) {
 	metrics.Reset() // Reset metrics before test
 	cfg := &config.Config{
-		Frontends: []config.Frontend{{Port: 8081}}, // Use different port to avoid conflicts
+		Frontends: []config.Frontend{{Port: 18080}}, // Use high port number to avoid conflicts
 	}
 	lb, err := New(cfg, metrics.New())
 	if err != nil {

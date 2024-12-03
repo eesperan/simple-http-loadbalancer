@@ -135,6 +135,7 @@ ratelimit:
   enabled: true
   rate: 100 # requests per second
   burst: 50 # burst size
+  algorithm: "token_bucket" # or "sliding_window"
 
 circuitbreaker:
   threshold: 5 # failures before opening
@@ -149,6 +150,53 @@ metrics:
   enabled: true
   port: 9090
 ```
+
+## Error Handling
+
+The load balancer implements comprehensive error handling:
+
+- Custom error types with context
+- Detailed error tracking and reporting
+- Error code categorization
+- Automatic error recovery
+- Error metrics collection
+
+## Operational Features
+
+### Rolling Updates
+
+Support for zero-downtime updates:
+
+```go
+err := lb.Rollout(ctx, RolloutConfig{
+    NewBackends: []string{"http://new1:9001", "http://new2:9002"},
+    BatchSize:   1,
+    Interval:    time.Second * 30,
+})
+```
+
+### Graceful Shutdown
+
+```go
+ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+defer cancel()
+lb.Start(ctx)
+```
+
+### Rate Limiting
+
+Two algorithms available:
+
+1. Token Bucket - For steady rate limiting
+2. Sliding Window - For precise rate control
+
+### Circuit Breaker
+
+Protects backends from cascading failures:
+
+- Configurable failure thresholds
+- Automatic recovery
+- Half-open state for testing recovery
 
 ## API Documentation
 

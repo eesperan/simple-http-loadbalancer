@@ -44,7 +44,6 @@ func (lb *LoadBalancer) Rollout(ctx context.Context, config RolloutConfig) error
 	lb.mu.RUnlock()
 
 	// Perform rollout in batches
-	currentBackends := oldBackends
 	for i := 0; i < len(config.NewBackends); i += config.BatchSize {
 		select {
 		case <-ctx.Done():
@@ -55,20 +54,16 @@ func (lb *LoadBalancer) Rollout(ctx context.Context, config RolloutConfig) error
 				end = len(config.NewBackends)
 			}
 
-			// Create new backend list with current batch
-			newBackends := make([]string, len(currentBackends))
-			copy(newBackends, currentBackends)
-			for j := i; j < end; j++ {
-				newBackends = append(newBackends, config.NewBackends[j])
-			}
+			// Replace backends with current batch
+			batch := make([]string, end)
+			copy(batch, config.NewBackends[:end])
 
-			if err := lb.updateBackends(newBackends); err != nil {
+			if err := lb.updateBackends(batch); err != nil {
 				// Rollback on error
 				_ = lb.updateBackends(oldBackends)
 				return fmt.Errorf("rollout failed: %v", err)
 			}
 
-			currentBackends = newBackends
 			// Wait for health checks to stabilize
 			time.Sleep(config.Interval)
 		}
@@ -100,7 +95,6 @@ func (lb *LoadBalancer) Rollback(ctx context.Context, config RollbackConfig) err
 	lb.mu.RUnlock()
 
 	// Perform rollback in batches
-	remainingBackends := currentBackends
 	for i := 0; i < len(config.PreviousBackends); i += config.BatchSize {
 		select {
 		case <-ctx.Done():
@@ -111,16 +105,16 @@ func (lb *LoadBalancer) Rollback(ctx context.Context, config RollbackConfig) err
 				end = len(config.PreviousBackends)
 			}
 
-			// Create new backend list with current batch
-			newBackends := config.PreviousBackends[:end]
+			// Replace backends with current batch
+			batch := make([]string, end)
+			copy(batch, config.PreviousBackends[:end])
 
-			if err := lb.updateBackends(newBackends); err != nil {
+			if err := lb.updateBackends(batch); err != nil {
 				// Attempt to restore current configuration
 				_ = lb.updateBackends(currentBackends)
 				return fmt.Errorf("rollback failed: %v", err)
 			}
 
-			remainingBackends = newBackends
 			// Wait for health checks to stabilize
 			time.Sleep(config.Interval)
 		}
