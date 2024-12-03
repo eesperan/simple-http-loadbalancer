@@ -7,10 +7,10 @@ import (
 )
 
 func TestTokenBucket(t *testing.T) {
-	// Test with 100 requests per second limit
+	// Test with 10 requests per second limit and burst of 10
 	limiter := New(Config{
-		Rate:     100,
-		Capacity: 100,
+		Rate:     10,
+		Capacity: 10,
 	})
 
 	// Test initial state
@@ -18,34 +18,45 @@ func TestTokenBucket(t *testing.T) {
 		t.Error("First request should be allowed")
 	}
 
-	// Test burst handling
-	for i := 0; i < 98; i++ {
+	// Test burst handling (should allow 8 more requests)
+	for i := 0; i < 8; i++ {
 		if err := limiter.Allow(); err != nil {
 			t.Errorf("Request %d should be allowed within burst capacity", i)
 		}
 	}
 
-	// Test rate limiting
+	// This request should consume the last token
+	if err := limiter.Allow(); err != nil {
+		t.Error("Last token should be consumed successfully")
+	}
+
+	// This request should be denied as we've consumed all tokens
 	if err := limiter.Allow(); err == nil {
 		t.Error("Expected rate limit to be exceeded")
 	}
 
 	// Test refill
-	time.Sleep(time.Second)
+	time.Sleep(200 * time.Millisecond) // Wait for 2 tokens to be refilled (at 10 per second)
 	if err := limiter.Allow(); err != nil {
-		t.Error("Request should be allowed after refill")
+		t.Error("Request should be allowed after partial refill")
+	}
+	if err := limiter.Allow(); err != nil {
+		t.Error("Request should be allowed after partial refill")
+	}
+	if err := limiter.Allow(); err == nil {
+		t.Error("Expected rate limit to be exceeded after consuming refilled tokens")
 	}
 }
 
 func TestTokenBucketConcurrency(t *testing.T) {
 	limiter := New(Config{
-		Rate:     100,
-		Capacity: 100,
+		Rate:     50,
+		Capacity: 50,
 	})
 
 	var wg sync.WaitGroup
 	numGoroutines := 10
-	requestsPerGoroutine := 20
+	requestsPerGoroutine := 10
 
 	// Track allowed and rejected requests
 	var (
@@ -212,7 +223,7 @@ func TestRateLimiterBurstHandling(t *testing.T) {
 	}
 
 	// Test recovery
-	time.Sleep(2 * time.Second)
+	time.Sleep(200 * time.Millisecond) // Wait for 2 tokens at 10 per second
 	if err := limiter.Allow(); err != nil {
 		t.Error("Expected request to be allowed after recovery period")
 	}

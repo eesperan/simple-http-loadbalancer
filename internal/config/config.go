@@ -37,17 +37,30 @@ func (h *HealthCheck) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	}
 
 	var err error
-	h.Interval, err = time.ParseDuration(raw.Interval)
-	if err != nil {
-		return fmt.Errorf("invalid interval duration: %v", err)
+	if raw.Interval == "" {
+		h.Interval = 10 * time.Second
+	} else {
+		h.Interval, err = time.ParseDuration(raw.Interval)
+		if err != nil {
+			return fmt.Errorf("invalid interval duration: %v", err)
+		}
 	}
 
-	h.Timeout, err = time.ParseDuration(raw.Timeout)
-	if err != nil {
-		return fmt.Errorf("invalid timeout duration: %v", err)
+	if raw.Timeout == "" {
+		h.Timeout = 2 * time.Second
+	} else {
+		h.Timeout, err = time.ParseDuration(raw.Timeout)
+		if err != nil {
+			return fmt.Errorf("invalid timeout duration: %v", err)
+		}
 	}
 
-	h.Path = raw.Path
+	if raw.Path == "" {
+		h.Path = "/health"
+	} else {
+		h.Path = raw.Path
+	}
+
 	return nil
 }
 
@@ -66,19 +79,6 @@ type SSL struct {
 	KeyFile    string            `yaml:"keyFile"`
 	CAFile     string            `yaml:"caFile"`
 	ClientAuth tls.ClientAuthType `yaml:"clientAuth"`
-}
-
-// ToSSLConfig converts the SSL config to the format expected by the ssl package
-func (s *SSL) ToSSLConfig() *SSL {
-	if s == nil {
-		return nil
-	}
-	return &SSL{
-		CertFile:   s.CertFile,
-		KeyFile:    s.KeyFile,
-		CAFile:     s.CAFile,
-		ClientAuth: s.ClientAuth,
-	}
 }
 
 type Config struct {
@@ -101,15 +101,24 @@ func Load(path string) (*Config, error) {
 		return nil, fmt.Errorf("failed to parse config file: %v", err)
 	}
 
-	// Set default values if not specified
+	// Set default values
+	if config.HealthCheck.Path == "" {
+		config.HealthCheck.Path = "/health"
+	}
 	if config.HealthCheck.Interval == 0 {
 		config.HealthCheck.Interval = 10 * time.Second
 	}
 	if config.HealthCheck.Timeout == 0 {
 		config.HealthCheck.Timeout = 2 * time.Second
 	}
-	if config.HealthCheck.Path == "" {
-		config.HealthCheck.Path = "/health"
+	if config.Metrics.Port == 0 {
+		config.Metrics.Port = 9090
+	}
+	if config.Logging.Level == "" {
+		config.Logging.Level = "info"
+	}
+	if config.Logging.Format == "" {
+		config.Logging.Format = "json"
 	}
 
 	return config, nil

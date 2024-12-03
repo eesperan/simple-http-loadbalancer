@@ -8,6 +8,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
+	Reset() // Reset metrics before test
 	m := New()
 
 	// Test that metrics instance is created
@@ -48,9 +49,15 @@ func TestNew(t *testing.T) {
 	if testutil.ToFloat64(m.ErrorsTotal) != 0 {
 		t.Errorf("Expected initial ErrorsTotal to be 0, got %f", testutil.ToFloat64(m.ErrorsTotal))
 	}
+
+	// Test registry
+	if m.GetRegistry() == nil {
+		t.Fatal("Expected non-nil registry")
+	}
 }
 
 func TestMetricsIncrement(t *testing.T) {
+	Reset() // Reset metrics before test
 	m := New()
 
 	// Test RequestsTotal increment
@@ -83,6 +90,7 @@ func TestMetricsIncrement(t *testing.T) {
 }
 
 func TestMetricsLabels(t *testing.T) {
+	Reset() // Reset metrics before test
 	m := New()
 
 	// Test backend health labels
@@ -104,6 +112,7 @@ func TestMetricsLabels(t *testing.T) {
 }
 
 func TestResponseTimeObservation(t *testing.T) {
+	Reset() // Reset metrics before test
 	m := New()
 
 	// Observe some response times
@@ -119,6 +128,7 @@ func TestResponseTimeObservation(t *testing.T) {
 }
 
 func TestMetricsReset(t *testing.T) {
+	Reset() // Reset metrics before test
 	m := New()
 
 	// Set some values
@@ -127,13 +137,9 @@ func TestMetricsReset(t *testing.T) {
 	m.ErrorsTotal.Inc()
 	m.BackendHealth.With(prometheus.Labels{"backend_url": "test-backend"}).Set(1)
 
-	// Create new registry and metrics
-	registry := prometheus.NewRegistry()
+	// Reset metrics
+	Reset()
 	m = New()
-	registry.MustRegister(m.RequestsTotal)
-	registry.MustRegister(m.ActiveConnections)
-	registry.MustRegister(m.ErrorsTotal)
-	registry.MustRegister(m.BackendHealth)
 
 	// Verify all metrics are reset
 	if testutil.ToFloat64(m.RequestsTotal) != 0 {
@@ -144,5 +150,20 @@ func TestMetricsReset(t *testing.T) {
 	}
 	if testutil.ToFloat64(m.ErrorsTotal) != 0 {
 		t.Error("Expected ErrorsTotal to be reset to 0")
+	}
+}
+
+func TestMetricsSingleton(t *testing.T) {
+	Reset() // Reset metrics before test
+	m1 := New()
+	m2 := New()
+
+	if m1 != m2 {
+		t.Error("Expected metrics to be a singleton")
+	}
+
+	// Test that both instances share the same registry
+	if m1.GetRegistry() != m2.GetRegistry() {
+		t.Error("Expected metrics instances to share the same registry")
 	}
 }

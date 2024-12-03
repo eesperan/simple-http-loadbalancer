@@ -13,6 +13,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
+	metrics.Reset() // Reset metrics before test
 	cfg := &config.Config{
 		Backends: []string{"http://localhost:8001", "http://localhost:8002"},
 	}
@@ -32,6 +33,7 @@ func TestNew(t *testing.T) {
 }
 
 func TestUpdateBackends(t *testing.T) {
+	metrics.Reset() // Reset metrics before test
 	lb := &LoadBalancer{
 		metrics: metrics.New(),
 		wrr:     algorithm.NewWeightedRoundRobin(),
@@ -48,13 +50,14 @@ func TestUpdateBackends(t *testing.T) {
 	}
 
 	// Test invalid backend URL
-	err = lb.updateBackends([]string{"invalid-url"})
+	err = lb.updateBackends([]string{"not-a-valid-url"})
 	if err == nil {
 		t.Error("Expected error for invalid backend URL")
 	}
 }
 
 func TestServeHTTP(t *testing.T) {
+	metrics.Reset() // Reset metrics before test
 	// Create test backend servers
 	backend1 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("backend1"))
@@ -98,8 +101,9 @@ func TestServeHTTP(t *testing.T) {
 }
 
 func TestGracefulShutdown(t *testing.T) {
+	metrics.Reset() // Reset metrics before test
 	cfg := &config.Config{
-		Frontends: []config.Frontend{{Port: 8080}},
+		Frontends: []config.Frontend{{Port: 8081}}, // Use different port to avoid conflicts
 	}
 	lb, err := New(cfg, metrics.New())
 	if err != nil {

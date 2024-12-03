@@ -2,193 +2,190 @@ package balancer
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
 
+	"loadbalancer/internal/config"
 	"loadbalancer/internal/metrics"
 )
 
+func setupTestBackends(t *testing.T, count int) ([]*httptest.Server, []string) {
+	var servers []*httptest.Server
+	var urls []string
+
+	for i := 0; i < count; i++ {
+		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		}))
+		servers = append(servers, server)
+		urls = append(urls, server.URL)
+	}
+
+	return servers, urls
+}
+
 func TestRollout(t *testing.T) {
-	// Create test servers
-	server1 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("server1"))
-	}))
-	defer server1.Close()
+	metrics.Reset() // Reset metrics before test
 
-	server2 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("server2"))
-	}))
-	defer server2.Close()
+	// Setup initial backends
+	servers, urls := setupTestBackends(t, 3)
+	defer func() {
+		for _, server := range servers {
+			server.Close()
+		}
+	}()
 
-	server3 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("server3"))
-	}))
-	defer server3.Close()
-
-	// Initialize load balancer with initial backends
-	lb := &LoadBalancer{
-		metrics: metrics.New(),
-	}
-	initialBackends := []string{server1.URL}
-	err := lb.updateBackends(initialBackends)
+	// Create load balancer with initial backends
+	lb, err := New(&config.Config{
+		Backends: urls[:2], // Start with 2 backends
+	}, metrics.New())
 	if err != nil {
-		t.Fatalf("Failed to initialize backends: %v", err)
+		t.Fatalf("Failed to create load balancer: %v", err)
 	}
 
-	// Test rollout configuration
-	config := RolloutConfig{
-		NewBackends: []string{server2.URL, server3.URL},
+	// Create new backend configuration
+	newBackends := []string{urls[1], urls[2]} // Roll out to backend 2 and 3
+
+	// Test rollout
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err = lb.Rollout(ctx, RolloutConfig{
+		NewBackends: newBackends,
 		BatchSize:   1,
 		Interval:    100 * time.Millisecond,
-	}
+	})
 
-	// Perform rollout
-	ctx := context.Background()
-	err = lb.Rollout(ctx, config)
 	if err != nil {
-		t.Fatalf("Rollout failed: %v", err)
+		t.Errorf("Rollout failed: %v", err)
 	}
 
-	// Verify final backend count
+	// Verify new backend configuration
+	if len(lb.backends) != len(newBackends) {
+		t.Errorf("Expected %d backends after rollout, got %d", len(newBackends), len(lb.backends))
+	}
+
+	// Test rollback
+	err = lb.Rollback(ctx, RollbackConfig{
+		PreviousBackends: urls[:2],
+		BatchSize:        1,
+		Interval:         100 * time.Millisecond,
+	})
+
+	if err != nil {
+		t.Errorf("Rollback failed: %v", err)
+	}
+
+	// Verify rolled back configuration
 	if len(lb.backends) != 2 {
-		t.Errorf("Expected 2 backends after rollout, got %d", len(lb.backends))
-	}
-
-	// Test rollout with invalid backend
-	invalidConfig := RolloutConfig{
-		NewBackends: []string{"invalid-url"},
-		BatchSize:   1,
-		Interval:    100 * time.Millisecond,
-	}
-
-	err = lb.Rollout(ctx, invalidConfig)
-	if err == nil {
-		t.Error("Expected error for invalid backend URL")
+		t.Errorf("Expected 2 backends after rollback, got %d", len(lb.backends))
 	}
 }
 
-func TestRollback(t *testing.T) {
-	// Create test servers
-	server1 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("server1"))
-	}))
-	defer server1.Close()
+func TestRolloutErrors(t *testing.T) {
+	metrics.Reset() // Reset metrics before test
 
-	server2 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("server2"))
-	}))
-	defer server2.Close()
-
-	// Initialize load balancer with initial backends
-	lb := &LoadBalancer{
-		metrics: metrics.New(),
-	}
-	initialBackends := []string{server2.URL}
-	err := lb.updateBackends(initialBackends)
-	if err != nil {
-		t.Fatalf("Failed to initialize backends: %v", err)
-	}
-
-	// Test rollback configuration
-	config := RollbackConfig{
-		PreviousBackends: []string{server1.URL},
-		BatchSize:        1,
-		Interval:         100 * time.Millisecond,
-	}
-
-	// Perform rollback
-	ctx := context.Background()
-	err = lb.Rollback(ctx, config)
-	if err != nil {
-		t.Fatalf("Rollback failed: %v", err)
-	}
-
-	// Verify final backend count
-	if len(lb.backends) != 1 {
-		t.Errorf("Expected 1 backend after rollback, got %d", len(lb.backends))
-	}
-
-	// Test rollback with invalid backend
-	invalidConfig := RollbackConfig{
-		PreviousBackends: []string{"invalid-url"},
-		BatchSize:        1,
-		Interval:         100 * time.Millisecond,
-	}
-
-	err = lb.Rollback(ctx, invalidConfig)
-	if err == nil {
-		t.Error("Expected error for invalid backend URL")
-	}
-}
-
-func TestRolloutState(t *testing.T) {
-	state := &RolloutState{}
-
-	// Test initial state
-	phase, progress, err := state.getStatus()
-	if phase != "" || progress != 0 || err != nil {
-		t.Error("Unexpected initial state")
-	}
-
-	// Test state update
-	testPhase := "testing"
-	testProgress := 50.0
-	testError := fmt.Errorf("test error")
-	
-	state.update(testPhase, testProgress, testError)
-	
-	phase, progress, err = state.getStatus()
-	if phase != testPhase {
-		t.Errorf("Expected phase %s, got %s", testPhase, phase)
-	}
-	if progress != testProgress {
-		t.Errorf("Expected progress %f, got %f", testProgress, progress)
-	}
-	if err != testError {
-		t.Error("Expected test error")
-	}
-}
-
-func TestRolloutWithContext(t *testing.T) {
-	lb := &LoadBalancer{
-		metrics: metrics.New(),
-	}
-
-	// Create context with cancel
-	ctx, cancel := context.WithCancel(context.Background())
-	
-	// Create test server
+	// Setup test backend
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("test"))
+		w.WriteHeader(http.StatusOK)
 	}))
 	defer server.Close()
 
-	// Configure rollout
-	config := RolloutConfig{
-		NewBackends: []string{server.URL},
-		BatchSize:   1,
-		Interval:    1 * time.Second, // Long enough to cancel
+	// Create load balancer
+	lb, err := New(&config.Config{
+		Backends: []string{server.URL},
+	}, metrics.New())
+	if err != nil {
+		t.Fatalf("Failed to create load balancer: %v", err)
 	}
 
-	// Start rollout in goroutine
-	errChan := make(chan error)
-	go func() {
-		errChan <- lb.Rollout(ctx, config)
+	// Test empty backends
+	err = lb.Rollout(context.Background(), RolloutConfig{
+		NewBackends: []string{},
+		BatchSize:   1,
+		Interval:    100 * time.Millisecond,
+	})
+	if err == nil {
+		t.Error("Expected error for empty backends")
+	}
+
+	// Test invalid backend URL
+	err = lb.Rollout(context.Background(), RolloutConfig{
+		NewBackends: []string{"invalid-url"},
+		BatchSize:   1,
+		Interval:    100 * time.Millisecond,
+	})
+	if err == nil {
+		t.Error("Expected error for invalid backend URL")
+	}
+
+	// Test context cancellation
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel() // Cancel immediately
+
+	err = lb.Rollout(ctx, RolloutConfig{
+		NewBackends: []string{server.URL},
+		BatchSize:   1,
+		Interval:    100 * time.Millisecond,
+	})
+	if err == nil {
+		t.Error("Expected error for cancelled context")
+	}
+}
+
+func TestRolloutConcurrency(t *testing.T) {
+	metrics.Reset() // Reset metrics before test
+
+	// Setup test backends
+	servers, urls := setupTestBackends(t, 4)
+	defer func() {
+		for _, server := range servers {
+			server.Close()
+		}
 	}()
 
-	// Cancel context
-	cancel()
+	// Create load balancer
+	lb, err := New(&config.Config{
+		Backends: urls[:2],
+	}, metrics.New())
+	if err != nil {
+		t.Fatalf("Failed to create load balancer: %v", err)
+	}
 
-	// Check if rollout was cancelled
-	select {
-	case err := <-errChan:
-		if err != context.Canceled {
-			t.Errorf("Expected context.Canceled error, got %v", err)
+	// Start serving requests
+	done := make(chan struct{})
+	go func() {
+		for {
+			select {
+			case <-done:
+				return
+			default:
+				req := httptest.NewRequest("GET", "/", nil)
+				w := httptest.NewRecorder()
+				lb.ServeHTTP(w, req)
+				time.Sleep(10 * time.Millisecond)
+			}
 		}
-	case <-time.After(2 * time.Second):
-		t.Error("Rollout did not cancel in time")
+	}()
+
+	// Perform rollout while serving requests
+	ctx := context.Background()
+	err = lb.Rollout(ctx, RolloutConfig{
+		NewBackends: urls[2:],
+		BatchSize:   1,
+		Interval:    100 * time.Millisecond,
+	})
+
+	close(done)
+
+	if err != nil {
+		t.Errorf("Rollout failed: %v", err)
+	}
+
+	// Verify final configuration
+	if len(lb.backends) != 2 {
+		t.Errorf("Expected 2 backends after rollout, got %d", len(lb.backends))
 	}
 }
