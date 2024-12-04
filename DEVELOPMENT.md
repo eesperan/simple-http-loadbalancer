@@ -39,8 +39,7 @@ lb-project/
 1. **Fork and Clone**
 
    ```bash
-   git clone https://github.com/yourusername/lb-project.git
-   cd lb-project
+   gh repo fork --clone eesperan/simple-http-webserver
    ```
 
 2. **Install Dependencies**
